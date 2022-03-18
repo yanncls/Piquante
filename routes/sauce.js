@@ -1,23 +1,24 @@
 const express = require('express');
+const sauce = require('../models/sauce');
 const router = express.Router();
 
 const Auth = require('../models/user');
 
 router.post('/', (req, res, next) => {
-    const auth = new Auth({
-        email: req.body.email,
-        password: req.body.password
+    delete req.body._id;
+    const sauce = new sauce({
+        ...req.body
     });
-    auth.save().then(
+    sauce.save().then(
         () => {
             res.status(201).json({
-                message: 'Account created'
+                message: 'objet enregistré'
             });
         }
     ).catch(
         (error) => {
             res.status(400).json({
-                error: error
+                error
             });
         }
     );
