@@ -1,14 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
 require('dotenv').config()
 
 const app = express();
 
-const sauce = require('./models/sauce')
+app.use(bodyParser.json());
+app.use(express.json());
+
 const userRoutes = require('./routes/user');
+const sauceRoutes = require('./routes/sauce')
 
-
+// mongodb connect
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/myFirstDatabase?retryWrites=true&w=majority`,
     {
         useNewUrlParser: true,
@@ -18,7 +21,7 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 
-
+// CORS
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -26,10 +29,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(bodyParser.json());
-
+// logique de route
 app.use('/api/auth', userRoutes);
-// app.use('/api/sauces', sauceRoutes);
+app.use('/api/sauce', sauceRoutes);
 
 
 module.exports = app;
