@@ -4,12 +4,14 @@ const validator = require('email-validator');
 
 const user = require("../models/user");
 
+// Ajout d'une regex pour complexifier le mot de passe user
+const passwrd = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
 // Logique métier user
 // Création de nouveaux users
 exports.signup = (req, res, next) => {
-    if (!validator.validate(req.body.email)) return res.status(403).json({ message: 'Le format de l\'adresse mail est incorrect.' })
-    if (req.body.password.length > 8) {
+    if (!validator.validate(req.body.email)) return res.status(403).json({ message: 'Le format du mail est incorrect.' })
+    if (req.body.password.length > 8 && passwrd.test(req.body.password)) {
         // bcrypt hash de password
         bcrypt.hash(req.body.password, 10)
             .then(hash => {
@@ -24,7 +26,7 @@ exports.signup = (req, res, next) => {
                     .catch(error => res.status(400).json({ error }));
             })
             .catch(error => res.status(500).json({ error }));
-    } else return res.status(403).json({ message: 'Votre mot de passe doit contenir 8 caractères minimum.' })
+    } else return res.status(403).json({ message: 'Votre mot de passe doit contenir 8 caractères minimum. Une lettre majuscule. Une lettre minuscule. Un chiffre.' })
 };
 
 // login de l'user
@@ -49,7 +51,7 @@ exports.login = (req, res, next) => {
                         userId: user._id,
                         token: jwt.sign(
                             { userId: user._id },
-                            'RANDOM_TOKEN_SECRET',
+                            process.env.ACCESS_TOKEN_SECRET,
                             { expiresIn: '24h' }
                         )
                     });
