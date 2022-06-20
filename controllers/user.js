@@ -44,7 +44,9 @@ exports.login = (req, res, next) => {
     .findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
-        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+        return res
+          .status(401)
+          .json({ error: "Utilisateur et/ou mot de passe incorrect" });
       }
 
       // comparer le mdp dans la bdd avec celui de la requête
@@ -52,10 +54,12 @@ exports.login = (req, res, next) => {
         .compare(req.body.password, user.password)
         .then((valid) => {
           if (!valid) {
-            return res.status(401).json({ error: "Mot de passe incorrect !" });
+            return res
+              .status(401)
+              .json({ error: "Utilisateur et/ou mot de passe incorrect" });
           }
           res.status(200).json({
-            // création d'un token pour sécuriser le compte
+            // création d'un token pour sécurisé le compte
             userId: user._id,
             token: jwt.sign(
               { userId: user._id },
