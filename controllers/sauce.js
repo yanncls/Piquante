@@ -119,7 +119,14 @@ exports.likeOrDislike = (req, res, next) => {
         }
       )
         .then(() =>
-          res.status(200).json({ message: "Vous avez aimé la sauce" })
+          res.status(200).json({
+            message:
+              req.body.like == 1
+                ? "Vous avez aimé la sauce"
+                : req.body.like == -1
+                ? "Vous n'avez pas aimé la sauce"
+                : "Vous avez retiré votre vote",
+          })
         )
         .catch((error) => res.status(400).json({ error }));
     })
