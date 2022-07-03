@@ -42,13 +42,14 @@ exports.modifySauce = (req, res, next) => {
   const userId = req.userId;
   console.log("userID", userId);
   // Recuperer la sauce existante
-  Sauce.findOne({ id: req.params.id }).then((sauce) => {
+  Sauce.findOne({ _id: req.params.id }).then((sauce) => {
     // Si la sauce n'existe pas => error
     if (!sauce) {
+      console.log(sauce);
       throw Error("Sauce inexistante");
     }
     // Si elle existe, => verifie que son userId correspond a req.userId
-    if (req.userId != sauce.userId) {
+    else if (userId != sauce.userId) {
       throw Error("Une erreur est survenue");
     }
     // Si tout est ok, on procede
@@ -93,13 +94,14 @@ exports.likeOrDislike = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       // Verifie si l'utilisateur a soit liker ou disliker
-      sauceLiked = sauce.usersLiked.indexOf(req.body.userId);
-      sauceDisliked = sauce.usersDisliked.indexOf(req.body.userId);
+      const sauceLiked = sauce.usersLiked.indexOf(req.body.userId);
+      const sauceDisliked = sauce.usersDisliked.indexOf(req.body.userId);
+      console.log(sauceLiked, sauceDisliked);
 
       // Si oui on retire des like/dislike
       sauce.usersDisliked.splice(sauceDisliked, 1);
       sauce.usersLiked.splice(sauceLiked, 1);
-      // Si non on procede normallement
+      // Si non on procede normalement
 
       // Cas ou l'user like
       if (req.body.like == 1) {
