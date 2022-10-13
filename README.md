@@ -1,8 +1,8 @@
-Piquante, 
+#Piquante 
 
-Une application web d'avis gastronomiques dont une API à construire from scratch. 
+##Une application web d'avis gastronomiques dont une API à construire from scratch. 
 
-Réalisé avec #javascript #nodejs #mongodb
+###Réalisé avec #javascript #nodejs #mongodb
 
 L'utilisateur va pouvoir se connecter ou créer un compte, un token sécurisé lui sera envoyé par l'API pour sa navigation.
 
